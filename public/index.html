@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diwali Donation Drive 🪔</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .counter-container {
+            text-align: center;
+        }
+        .counter-container h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .counter {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="counter-container">
+        <h1>Diwali Donation Drive 🪔</h1>
+        <div class="counter" id="donationCounter">₹0</div>
+    </div>
+
+    <script>
+        function animateCounter(element, start, end, duration) {
+            let startTime = null;
+            function animationStep(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                element.innerText = '₹' + Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    requestAnimationFrame(animationStep);
+                }
+            }
+            requestAnimationFrame(animationStep);
+        }
+
+        async function updateCounter() {
+            try {
+                const response = await fetch('/donation');
+                const data = await response.json();
+                const currentAmount = parseInt(donationCounter.innerText.replace('₹', '')) || 0;
+                animateCounter(donationCounter, currentAmount, data.amount, 1000);
+            } catch (error) {
+                console.error("Error fetching donation amount:", error);
+            }
+        }
+
+        const donationCounter = document.getElementById('donationCounter');
+        updateCounter();
+        setInterval(updateCounter, 5000);  // Update every 5 seconds
+    </script>
+</body>
+</html>

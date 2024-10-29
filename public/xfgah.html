@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Update Donations</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .admin-container {
+            text-align: center;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            width: 100px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Update Donation Amount</h1>
+        <input type="number" id="donationInput" placeholder="Enter amount" min="0">
+        <button onclick="updateDonationAmount()">Update</button>
+    </div>
+
+    <script>
+        async function updateDonationAmount() {
+            const donationInput = document.getElementById('donationInput');
+            const newAmount = parseInt(donationInput.value);
+            if (newAmount >= 0) {
+                try {
+                    const response = await fetch('/donation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ amount: newAmount })
+                    });
+                    if (response.ok) {
+                        alert("Donation amount updated!");
+                        donationInput.value = '';
+                    } else {
+                        alert("Error updating donation amount.");
+                    }
+                } catch (error) {
+                    console.error("Error updating donation amount:", error);
+                }
+            } else {
+                alert("Please enter a valid amount.");
+            }
+        }
+    </script>
+</body>
+</html>
